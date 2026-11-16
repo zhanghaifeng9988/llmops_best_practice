@@ -1,0 +1,22 @@
+[project]
+name = "llmops-best-practice"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "zhanghaifeng9988", email = "541099040@qq.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=2.8.0",
+    "langfuse>=5.2.0",
+    "openai>=3.51.0",
+    "python-dotenv>=1.2.4",
+]
+
+[project.scripts]
+llmops-best-practice = "llmops_best_practice:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
