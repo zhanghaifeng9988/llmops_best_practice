@@ -5,6 +5,16 @@ build/
 dist/
 wheels/
 *.egg-info
-.env
+
 # Virtual environments
 .venv
+.env
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+
+# Data
+rabbitmq

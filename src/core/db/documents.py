@@ -29,6 +29,7 @@ class BaseDocument(BaseModel):
 # 对象 → 字典（存进数据库前用）
     def to_mongo(self, **kwargs) -> dict:
         """Convert "id" (UUID object) into "_id" (str object)."""
+        # 有这个 key → 返回它的值，同时从 dict 里删掉   没有 → 返回默认值（不报错）
         exclude_unset = kwargs.pop("exclude_unset", False)
         by_alias = kwargs.pop("by_alias", True)
 # 调用 Pydantic 的 model_dump 转字典，Pydantic v2 的方法，把模型实例转成普通 dict

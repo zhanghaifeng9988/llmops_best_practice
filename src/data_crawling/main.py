@@ -10,7 +10,7 @@ from dispatcher import CrawlerDispatcher
 logger = Logger(service="llmops_best_practice/crawlers")
 
 _dispatcher = CrawlerDispatcher()
-#_dispatcher.register("medium", CustomArticleCrawler)
+_dispatcher.register("medium", CustomArticleCrawler)
 #_dispatcher.register("linkedin", CustomArticleCrawler)
 _dispatcher.register("github", GithubCrawler)
 

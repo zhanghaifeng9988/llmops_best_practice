@@ -36,7 +36,7 @@ class MediumCrawler(BaseAbstractCrawler):
             platform="medium", content=data, link=link, author_id=kwargs.get("user")
         )
         instance.save()
-
+# 半成品，本次未完成登录medium的逻辑
     def login(self):
         """Log in to Medium with Google"""
         self.driver.get("https://medium.com/m/signin")
