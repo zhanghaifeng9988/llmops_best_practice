@@ -25,7 +25,7 @@ class CustomArticleCrawler(BaseCrawler):
 
         logger.info(f"Starting scrapping article: {link}")
 
-        loader = AsyncHtmlLoader([link])
+        loader = AsyncHtmlLoader([link], trust_env=True, raise_for_status=True)
         docs = loader.load()
 
         html2text = Html2TextTransformer()

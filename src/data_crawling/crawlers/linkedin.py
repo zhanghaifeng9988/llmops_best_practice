@@ -1,4 +1,4 @@
-# 已被放弃使用
+# ！！！！！已被放弃使用！！！！！！
 import time
 from typing import Dict, List
 
@@ -32,7 +32,7 @@ class LinkedInCrawler(BaseAbstractCrawler):
 
         soup = self._get_page_content(link)
 
-        data = {
+        data = { #  noqa: F841
             "Name": self._scrape_section(soup, "h1", class_="text-heading-xlarge"),
             "About": self._scrape_section(soup, "div", class_="display-flex ph5 pv3"),
             "Main Page": self._scrape_section(soup, "div", {"id": "main-content"}),

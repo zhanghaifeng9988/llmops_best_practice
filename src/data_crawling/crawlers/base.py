@@ -3,8 +3,8 @@ from abc import ABC, abstractmethod
 from tempfile import mkdtemp
 
 from core.db.documents import BaseDocument
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+#from selenium import webdriver
+#from selenium.webdriver.chrome.options import Options
 
 # 每个爬虫都必须绑定一个文档模型 model，并且必须实现 extract(link, **kwargs) 来完成爬取。
 class BaseCrawler(ABC):
@@ -17,7 +17,7 @@ class BaseCrawler(ABC):
 
 class BaseAbstractCrawler(BaseCrawler, ABC):
     def __init__(self, scroll_limit: int = 5) -> None:
-        options = webdriver.ChromeOptions()
+        options = webdriver.ChromeOptions() # noqa: F821
 
         options.add_argument("--no-sandbox")
         options.add_argument("--headless=new")
@@ -36,11 +36,11 @@ class BaseAbstractCrawler(BaseCrawler, ABC):
         self.set_extra_driver_options(options)
 
         self.scroll_limit = scroll_limit
-        self.driver = webdriver.Chrome(
-            options=options,
+        self.driver = webdriver.Chrome(  # noqa: F821
+            options=options, 
         )
 
-    def set_extra_driver_options(self, options: Options) -> None:
+    def set_extra_driver_options(self, options: "Options") -> None:  # noqa: F821
         pass
 
     def login(self) -> None:

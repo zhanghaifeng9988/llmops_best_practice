@@ -34,12 +34,12 @@ class SelfQuery:
             return None
 
         logger.info(
-            f"Successfully extracted the user full name from the query.",
+            "Successfully extracted the user full name from the query.",
             user_full_name=user_full_name,
         )
         first_name, last_name = lib.split_user_full_name(user_full_name)
         logger.info(
-            f"Successfully extracted the user first and last name from the query.",
+            "Successfully extracted the user first and last name from the query.",
             first_name=first_name,
             last_name=last_name,
         )

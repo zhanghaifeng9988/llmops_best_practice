@@ -6,7 +6,7 @@ ROOT_DIR = str(Path(__file__).parent.parent.parent)
 
 
 class AppSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=ROOT_DIR + "/.env" , env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=ROOT_DIR + "/.env" , env_file_encoding="utf-8", extra="ignore")
 
     # MongoDB configs
     MONGO_DATABASE_HOST: str = (
@@ -28,7 +28,7 @@ class AppSettings(BaseSettings):
     QDRANT_APIKEY: str | None = None
 
     # OpenAI config
-    OPENAI_MODEL_ID: str = "gpt-4o-mini"
+    OPENAI_MODEL_ID: str = "qwen3.8-flash"
     OPENAI_API_KEY: str | None = None
 
     # CometML config
@@ -37,7 +37,7 @@ class AppSettings(BaseSettings):
     COMET_PROJECT: str = "llm-twin"
 
     # AWS Authentication
-    AWS_REGION: str = "eu-central-1"
+    AWS_REGION: str = " "
     AWS_ACCESS_KEY: str | None = None
     AWS_SECRET_KEY: str | None = None
     AWS_ARN_ROLE: str | None = None

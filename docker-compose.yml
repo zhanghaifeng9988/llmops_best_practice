@@ -7,10 +7,17 @@ services:
       - mongo-replica-1-data:/data/db
     ports:
       - "30001:30001"
-    healthcheck: # 把三个散装 Mongo 正式组装成副本集（只需执行一次）
-      test: test $$(echo "rs.initiate({_id:'my-replica-set',members:[{_id:0,host:\"mongo1:30001\"},{_id:1,host:\"mongo2:30002\"},{_id:2,host:\"mongo3:30003\"}]}).ok || rs.status().ok" | mongo --port 30001 --quiet) -eq 1
-      interval: 10s # 每 10 秒试一次，第一次成功初始化，之后变成纯探活
-      start_period: 30s # 启动头 30 秒失败不算数，给 Mongo 热身时间
+    depends_on:
+      mongo2:
+        condition: service_started
+      mongo3:
+        condition: service_started
+    healthcheck: # 把三个散装 Mongo 正式组装成副本集（只能成功一次，第二次调用数据库会抛 already initialized 错误。）
+      test: ["CMD", "mongo", "--port", "30001", "--quiet", "--eval", "try { rs.initiate({_id: 'my-replica-set', members: [{_id: 0, host: 'mongo1:30001'}, {_id: 1, host: 'mongo2:30002'}, {_id: 2, host: 'mongo3:30003'}]}); } catch (e) {} db.adminCommand('ping').ok"]
+      interval: 10s  # 每 10 秒试一次，第一次成功初始化，之后变成纯探活
+      timeout: 10s
+      retries: 5
+      start_period: 40s  # 启动头 40 秒失败不算数，给 Mongo 热身时间 
     restart: always
 # --replSet my-replica-set：以副本集模式启动（3 个 Mongo 组成一个集群，互相同步数据）
 # --bind_ip_all：监听所有网卡（否则容器外连不进来）
@@ -22,6 +29,10 @@ services:
       - mongo-replica-2-data:/data/db
     ports:
       - "30002:30002"
+    healthcheck:
+      test: echo 'db.adminCommand("ping").ok' | mongo --port 30002 --quiet | grep 1
+      interval: 10s
+      start_period: 20s
     restart: always
 
   mongo3:
@@ -32,6 +43,10 @@ services:
       - mongo-replica-3-data:/data/db
     ports:
       - "30003:30003"
+    healthcheck:
+      test: echo 'db.adminCommand("ping").ok' | mongo --port 30003 --quiet | grep 1
+      interval: 10s
+      start_period: 20s
     restart: always
 
   mq: # management = 带网页管理界面；alpine = 精简 Linux 底座，镜像小。
@@ -43,6 +58,10 @@ services:
     volumes:
       - ./rabbitmq/data/:/var/lib/rabbitmq/
       - ./rabbitmq/log/:/var/log/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      start_period: 40s
     restart: always
 
   qdrant:
@@ -66,14 +85,24 @@ services:
     build:
       context: .
       dockerfile: .docker/Dockerfile.data_crawlers
+    environment:
+      HTTP_PROXY: "${PROXY_URL}"
+      HTTPS_PROXY: "${PROXY_URL}"
+      http_proxy: "${PROXY_URL}"
+      https_proxy: "${PROXY_URL}"
+      NO_PROXY: "localhost,127.0.0.1,mongo1,mongo2,mongo3,mq,qdrant"
+      no_proxy: "localhost,127.0.0.1,mongo1,mongo2,mongo3,mq,qdrant"
     env_file:
       - .env
     ports:
       - "9010:8080"
     depends_on:
-      - mongo1
-      - mongo2
-      - mongo3
+      mongo1:
+          condition: service_healthy
+      mongo2:
+          condition: service_healthy
+      mongo3:
+          condition: service_healthy
 
   data_cdc:
     image: "llm-twin-data-cdc"
@@ -84,10 +113,14 @@ services:
     env_file:
       - .env
     depends_on:
-      - mongo1
-      - mongo2
-      - mongo3
-      - mq
+      mongo1:
+          condition: service_healthy
+      mongo2:
+          condition: service_healthy
+      mq:
+          condition: service_healthy
+      mongo3:
+          condition: service_healthy
 
   feature_pipeline:
     image: "llm-twin-feature-pipeline"
@@ -102,8 +135,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - mq
-      - qdrant
+      mq:
+          condition: service_healthy
+      qdrant:
+          condition: service_started
     restart: always
 
 volumes:

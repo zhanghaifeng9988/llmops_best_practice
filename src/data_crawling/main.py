@@ -4,7 +4,7 @@ from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from core import lib
 from core.db.documents import UserDocument
-from crawlers import CustomArticleCrawler, GithubCrawler, LinkedInCrawler
+from crawlers import CustomArticleCrawler, GithubCrawler
 from dispatcher import CrawlerDispatcher
 
 logger = Logger(service="llmops_best_practice/crawlers")
@@ -35,6 +35,6 @@ def handler(event, context: LambdaContext | None = None) -> dict[str, Any]:
 if __name__ == "__main__":
     event = {
         "user": "zhang haifeng",
-        "link": "https://github.com/zhanghaifeng9988/llmops_best_practice",
+        "link": "https://github.com/zhanghaifeng9988/-ml-learning-notes-homework",
     }
     handler(event, None)

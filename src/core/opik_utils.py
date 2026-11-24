@@ -15,7 +15,7 @@ try:
     import opik
     from comet_ml import Experiment
     from opik.configurator.configure import OpikConfigurator
-except:
+except Exception:
     logger.info("Could not import Opik and Comet.")
 
 

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-check:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Check dependency lock file
+        run: uv lock --check
+
+      - name: Install dev dependencies
+        run: uv sync --locked --only-group dev --no-install-project
+
+      - name: Run Ruff
+        run: uv run --no-sync ruff check .
+
+      - name: Compile Python files
+        run: uv run --no-sync python -m compileall -q src

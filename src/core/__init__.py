@@ -7,7 +7,7 @@ try:
     from .opik_utils import configure_opik
 
     configure_opik()
-except:
+except Exception:
     logger.warning("Could not configure Opik.")
 
 __all__ = ["get_logger", "logger_utils", "opik_utils", "db"]

@@ -1,0 +1,29 @@
+# Lambda 官方基础镜像：内置运行时模拟器(RIE)，本地 curl 即可调 handler
+FROM  public.ecr.aws/lambda/python:3.11 as build
+
+# git：GithubCrawler 执行 git clone 必需
+RUN yum install -y git && yum clean all
+
+# 先拷依赖清单（层缓存：改代码不触发重装依赖）
+COPY ./pyproject.toml ./uv.lock ./
+
+
+# 用 uv 从锁文件导出依赖，pip 装进 Lambda 任务目录，装完清理清单
+RUN python -m pip install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip install --no-cache-dir uv -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN uv export --frozen --no-dev --no-emit-project --no-hashes -o requirements.txt && \
+    pip install --no-cache-dir -r requirements.txt --target "${LAMBDA_TASK_ROOT}" \
+        -i https://pypi.tuna.tsinghua.edu.cn/simple && \
+    rm requirements.txt pyproject.toml uv.lock
+
+
+# 裸导入支持：crawlers/dispatcher 在 data_crawling 下，core 在任务根下
+ENV PYTHONPATH="${LAMBDA_TASK_ROOT}/data_crawling:${LAMBDA_TASK_ROOT}"
+
+# Copy function code
+COPY ./src/data_crawling ${LAMBDA_TASK_ROOT}/data_crawling
+COPY ./src/core ${LAMBDA_TASK_ROOT}/core
+
+# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
+# 告诉 Lambda 运行时：请求来了调哪个函数
+CMD ["data_crawling.main.handler"]

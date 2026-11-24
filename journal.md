@@ -12,11 +12,6 @@ uv add langfuse openai anthropic python-dotenv
 
 
 装库 
-aws_lambda_powertools
-pymongo
-structlog
-qdrant_client 
-opik 
-comet_ml
-langchain-community 
-html2text
+uv add aws-lambda-powertools pymongo pydantic-settings structlog qdrant-client opik comet-ml langchain-community html2text
+
+

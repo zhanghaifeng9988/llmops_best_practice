@@ -1,7 +1,7 @@
 from aws_lambda_powertools import Logger
 from bs4 import BeautifulSoup
 from core.db.documents import ArticleDocument
-from selenium.webdriver.common.by import By
+# from selenium.webdriver.common.by import By
 
 from crawlers.base import BaseAbstractCrawler
 
@@ -37,7 +37,7 @@ class MediumCrawler(BaseAbstractCrawler):
         )
         instance.save()
 # 半成品，本次未完成登录medium的逻辑
-    def login(self):
-        """Log in to Medium with Google"""
-        self.driver.get("https://medium.com/m/signin")
-        self.driver.find_element(By.TAG_NAME, "a").click()
+#    def login(self):
+#        """Log in to Medium with Google"""
+#        self.driver.get("https://medium.com/m/signin")
+#        self.driver.find_element(By.TAG_NAME, "a").click()

@@ -12,7 +12,7 @@ except ModuleNotFoundError:
         "Couldn't load AWS or SageMaker imports. Run 'poetry install --with aws' to support AWS."
     )
 
-from config import settings
+from config import settings   # noqa: E402
 
 
 def create_sagemaker_user(username: str):

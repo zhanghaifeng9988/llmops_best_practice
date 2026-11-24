@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from core.logger_utils import get_logger
+from core.logger_utils import get_logger 
 
 logger = get_logger(__file__)
 
@@ -12,7 +12,7 @@ except ModuleNotFoundError:
         "Couldn't load AWS or SageMaker imports. Run 'poetry install --with aws' to support AWS."
     )
 
-from core.config import settings
+from core.config import settings  # noqa: E402
 
 
 def create_sagemaker_execution_role(role_name: str):
