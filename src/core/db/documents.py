@@ -123,6 +123,17 @@ class RepositoryDocument(BaseDocument):
     class Settings:
         name = "repositories"
 
+# repository_files表：一文件一文档，绕开单文档16MB墙
+class RepositoryFileDocument(BaseDocument):
+    repo_name: str
+    repo_link: str
+    file_path: str
+    content: str
+    owner_id: str = Field(alias="owner_id")
+
+    class Settings:
+        name = "repository_files"
+
 # posts表
 
 class PostDocument(BaseDocument):
