@@ -36,13 +36,14 @@ local-test-github: # Make a call to your local AWS Lambda (hosted in Docker) to 
 	  	-d '{"user": "zhang haifeng", "link": "https://github.com/zhanghaifeng9988/llmops_best_practice"}'
 
 local-ingest-data: # Ingest all links from data/links.txt by calling your local AWS Lambda hosted in Docker.
-	while IFS= read -r link; do \
-		echo "Processing: $$link"; \
-		curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
-			-d "{\"user\": \"zhang haifeng\", \"link\": \"$$link\"}"; \
-		echo "\n"; \
-		sleep 2; \
-	done < data/links.txt
+    while IFS= read -r link || [ -n "$$link" ]; do \
+        [ -z "$$link" ] && continue; \
+        echo "Processing: $$link"; \
+        curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
+            -d "{\"user\": \"zhang haifeng\", \"link\": \"$$link\"}"; \
+        echo "\n"; \
+        sleep 2; \
+    done < data/links.txt
 
 # ======================================
 # -------- RAG Feature Pipeline --------
