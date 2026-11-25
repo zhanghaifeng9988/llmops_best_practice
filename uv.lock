@@ -900,6 +900,7 @@ dependencies = [
     { name = "langfuse" },
     { name = "openai" },
     { name = "opik" },
+    { name = "pika" },
     { name = "pydantic-settings" },
     { name = "pymongo" },
     { name = "python-dotenv" },
@@ -924,6 +925,7 @@ requires-dist = [
     { name = "langfuse", specifier = ">=5.2.0" },
     { name = "openai", specifier = ">=3.51.0" },
     { name = "opik", specifier = ">=2.2.138" },
+    { name = "pika", specifier = ">=1.5.0" },
     { name = "pydantic-settings", specifier = ">=2.16.3" },
     { name = "pymongo", specifier = ">=4.20.1" },
     { name = "python-dotenv", specifier = ">=1.2.4" },
@@ -1225,6 +1227,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/7d/fa/3944b40b07da9ce895c0e6303a5ab7d53da063554f534556b134a54d6093/packaging-26.3.tar.gz", hash = "sha256:94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79", size = 313412, upload-time = "2026-08-04T18:15:28.737Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl", hash = "sha256:d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c", size = 129956, upload-time = "2026-08-04T18:15:27.159Z" },
+]
+
+[[package]]
+name = "pika"
+version = "1.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b5/5b/0970a9bcdff70c87ad81a3bdb38bdc500e8ffc11427d9f8716c00e8321de/pika-1.5.0.tar.gz", hash = "sha256:339afb9b2f55b31e03ebd1d96308e72e1d1d8e0e2c4ccea57d0f3d72fd10f333", size = 199837, upload-time = "2026-11-17T15:57:48.769Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d7/f5/9af08e02515a20341791263501c60c4ed099f3e429b77451da04a5ef1f99/pika-1.5.0-py3-none-any.whl", hash = "sha256:bc474e3ffbfd8aeafa0ae05709e54b6d4bda13cb4cfeed8a8413df71e0f7f97a", size = 209891, upload-time = "2026-11-17T15:57:47.607Z" },
 ]
 
 [[package]]

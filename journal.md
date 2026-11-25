@@ -11,7 +11,8 @@ uv add langfuse openai anthropic python-dotenv
 测试一下大模型API的效果 
 
 
-装库 
+装库--原始数据获取阶段 
 uv add aws-lambda-powertools pymongo pydantic-settings structlog qdrant-client opik comet-ml langchain-community html2text
 
-
+装库--CDC阶段
+uv add pika
