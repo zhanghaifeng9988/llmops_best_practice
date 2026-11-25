@@ -110,6 +110,8 @@ services:
     build:
       context: .
       dockerfile: .docker/Dockerfile.data_cdc
+    environment:
+      RABBITMQ_PORT: "5672"  # 容器互联走 mq 原生端口；5673 只是宿主机映射门
     env_file:
       - .env
     depends_on:
@@ -121,6 +123,7 @@ services:
           condition: service_healthy
       mongo3:
           condition: service_healthy
+    restart: always
 
   feature_pipeline:
     image: "llm-twin-feature-pipeline"

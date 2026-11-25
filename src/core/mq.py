@@ -7,12 +7,12 @@ from core.logger_utils import get_logger
 
 logger = get_logger(__file__)
 
-
+# 管理RabbitMQ连接的类  （单例 + 自动开关）
 class RabbitMQConnection:
     """Singleton class to manage RabbitMQ connection."""
 
     _instance = None
-
+# 无论 RabbitMQConnection() 调多少次，拿到的都是同一个对象。
     def __new__(cls, *args, **kwargs) -> Self:
         if not cls._instance:
             cls._instance = super().__new__(cls, *args, **kwargs)
@@ -35,7 +35,7 @@ class RabbitMQConnection:
         self.password = password or settings.RABBITMQ_DEFAULT_PASSWORD
         self.virtual_host = virtual_host
         self.fail_silently = fail_silently
-        self._connection = None
+        self._connection = None # 对一个已连接的单例再调 RabbitMQConnection()，会把连接状态重置回 None。
 
     def __enter__(self):
         self.connect()
@@ -73,7 +73,7 @@ class RabbitMQConnection:
             self._connection = None
             print("Closed RabbitMQ connection")
 
-
+# 发一条消息到rabbitmq
 def publish_to_rabbitmq(queue_name: str, data: str):
     """Publish data to a RabbitMQ queue."""
     try:
