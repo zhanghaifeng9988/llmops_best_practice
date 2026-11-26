@@ -18,3 +18,4 @@ venv.bak/
 
 # Data
 rabbitmq
+data/milvus_lite.db*
