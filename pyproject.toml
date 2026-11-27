@@ -36,6 +36,16 @@ build-backend = "uv_build"
 # 因为 Lambda 镜像系统老，新版包装不上。别手贱升级。
 constraint-dependencies = ["numpy<2.3", "tiktoken<0.9", "rapidfuzz<3.14"]
 
+# torch 只从 CPU 专用源安装，避免拉下几个 GB 的 CUDA 依赖（本机 MX570 用不上）
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+
 [tool.ruff]
 target-version = "py311"
 line-length = 120
@@ -50,5 +60,11 @@ testpaths = ["tests"]
 dev = [
     "pytest>=9.2.0",
     "ruff>=0.17.6",
+]
+rag = [
+    "milvus-lite>=3.2.2",
+    "pymilvus>=3.0.3",
+    "sentence-transformers>=6.3.0",
+    "torch>=2.15.0",
 ]
 
