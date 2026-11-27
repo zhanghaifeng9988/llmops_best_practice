@@ -76,11 +76,11 @@ def main() -> None:
 
     schema = client.create_schema(auto_id=True)
     schema.add_field("id", DataType.INT64, is_primary=True)
-    schema.add_field("vector", DataType.FLOAT_VECTOR, dim=settings.EMBEDDING_SIZE)
+    schema.add_field("vector", DataType.FLOAT_VECTOR, dim=settings.EMBEDDING_SIZE) #  vector 负责"按意思找"
     schema.add_field("content", DataType.VARCHAR, max_length=65535)
-    schema.add_field("repo_name", DataType.VARCHAR, max_length=256)
+    schema.add_field("repo_name", DataType.VARCHAR, max_length=256)  # 溯源——这话出自哪个仓库哪个文件
     schema.add_field("file_path", DataType.VARCHAR, max_length=1024)
-    schema.add_field("owner_id", DataType.VARCHAR, max_length=64)
+    schema.add_field("owner_id", DataType.VARCHAR, max_length=64)  # 将来如果多用户时，按人过滤（"只搜我的笔记"）
 # 对 vector 建索引：度量用余弦相似度，索引类型 FLAT（暴力精确检索，适合小数据，无近似误差）。
     index_params = client.prepare_index_params()
     index_params.add_index(field_name="vector", metric_type="COSINE", index_type="FLAT")
