@@ -19,3 +19,4 @@ venv.bak/
 # Data
 rabbitmq
 data/milvus_lite.db*
+data/embeddings_cache.pkl

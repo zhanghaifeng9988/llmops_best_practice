@@ -52,9 +52,9 @@ class AppSettings(BaseSettings):
     MAX_BATCH_TOTAL_TOKENS: int = 2048  # Limits the number of tokens that can be processed in parallel during the generation.
 
     # Embeddings config
-    EMBEDDING_MODEL_ID: str = "BAAI/bge-m3"
-    EMBEDDING_MODEL_MAX_INPUT_LENGTH: int = 8192
-    EMBEDDING_SIZE: int = 1024
+    EMBEDDING_MODEL_ID: str = "BAAI/bge-base-zh-v1.5"
+    EMBEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
+    EMBEDDING_SIZE: int = 768
     EMBEDDING_MODEL_DEVICE: str = "cpu"
 
     # Milvus Lite config（嵌入式，数据存本地文件，无需容器）
