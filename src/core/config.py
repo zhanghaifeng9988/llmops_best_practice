@@ -4,10 +4,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT_DIR = str(Path(__file__).parent.parent.parent)
 
-
+# 告诉 pydantic："去项目根目录按 UTF-8 读 .env 来填配置，.env 里多出来的变量别报错，忽略就行"
+# 优先级：环境变量 > .env 文件 > 类里写的默认值
 class AppSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=ROOT_DIR + "/.env" , env_file_encoding="utf-8", extra="ignore")
-
+    model_config = SettingsConfigDict(env_file=ROOT_DIR + "/.env" , env_file_encoding="utf-8", extra="ignore") 
     # MongoDB configs
     MONGO_DATABASE_HOST: str = (
         "mongodb://mongo1:30001,mongo2:30002,mongo3:30003/?replicaSet=my-replica-set"
