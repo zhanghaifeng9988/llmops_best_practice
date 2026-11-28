@@ -16,8 +16,11 @@ def stream_process():
         db = client["twin"]
         logging.info("Connected to MongoDB.")
 
-        # Watch changes in a specific collection || match 过滤只留 insert
-        changes = db.watch([{"$match": {"operationType": {"$in": ["insert"]}}}])
+        # Watch changes in a specific collection 
+        changes = db.watch(
+            [{"$match": {"operationType": {"$in": ["insert", "update"]}}}],
+            full_document="updateLookup",
+        )
         for change in changes: # 阻塞式循环，没事件就挂着等，有事件立刻醒
             data_type = change["ns"]["coll"] #取集合名
             entry_id = str(change["fullDocument"]["_id"])  # Convert ObjectId to string
