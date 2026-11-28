@@ -53,6 +53,15 @@ class BaseDocument(BaseModel):
 
             return None
 
+    def update(self, **kwargs): # 更新一条数据
+        collection = _database[self._get_collection_name()]
+        data = self.to_mongo(**kwargs)
+        data.pop("_id", None) # 把 id 从更新内容里剔掉
+        try: # 只更新 data 里出现的字段，未出现的字段保持不变。
+            collection.update_one({"_id": str(self.id)}, {"$set": data})
+        except errors.WriteError:
+            logger.exception("Failed to update document.")
+
     @classmethod  # 有就给你，没有就新建
     def get_or_create(cls, **filter_options) -> Optional[str]:
         collection = _database[cls._get_collection_name()]

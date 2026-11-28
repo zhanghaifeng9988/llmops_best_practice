@@ -44,6 +44,7 @@ class GithubCrawler(BaseCrawler):
 # os.walk 遍历仓库每个目录，内层循环逐文件过五关：
 # #过滤 ignore → 大小帽 → 按文件去重 → 提取（ipynb 取 cell 源码 / 其他读全文）→ 生成一条文档。最后 bulk_insert 一次批量入库。一文件一文档
             docs = []
+            updated = 0
             for root, dirs, files in os.walk(repo_path):
                 dirs[:] = [d for d in dirs if d not in self._ignore_dirs]
                 dir = root.replace(repo_path, "").lstrip("/")
@@ -60,9 +61,6 @@ class GithubCrawler(BaseCrawler):
                         logger.warning(f"Skipping oversized file: {file_path}")
                         continue
 
-                    if self.model.find(repo_link=link, file_path=file_path):
-                        continue
-
                     if file.endswith(".ipynb"):
                         with open(full_path, "r", errors="ignore") as f:
                             nb = json.load(f)
@@ -75,6 +73,15 @@ class GithubCrawler(BaseCrawler):
                     else:
                         with open(full_path, "r", errors="ignore") as f:
                             text = f.read()
+                    # find 从 Mongo 查出老文档，from_mongo 把它还原成对象——带着原来的 id（那个 UUID）。这个 id 就是老文档在库里的身份证号。
+                    existing = self.model.find(repo_link=link, file_path=file_path)
+                    if existing:
+                        if existing.content == text: # 如果内容没变，就跳过
+                            continue
+                        existing.content = text
+                        existing.update()
+                        updated += 1
+                        continue
 
                     docs.append(
                         self.model(
@@ -86,11 +93,12 @@ class GithubCrawler(BaseCrawler):
                         )
                     )
 
-            if not docs:
-                logger.info(f"No new files to ingest for repository: {link}")
+            if not docs and not updated:
+                logger.info(f"No new or changed files for repository: {link}")
                 return
-
-            self.model.bulk_insert(docs)
+    
+            if docs:
+                self.model.bulk_insert(docs)
 
         except subprocess.CalledProcessError as e:
             logger.error(f"Git clone failed for {link}: {e.stderr}")
@@ -98,4 +106,4 @@ class GithubCrawler(BaseCrawler):
         finally:
             shutil.rmtree(local_temp)
 
-        logger.info(f"Finished scrapping GitHub repository: {link}, {len(docs)} files")
+        logger.info(f"Finished scrapping GitHub repository: {link}, {len(docs)} new, {updated} updated")

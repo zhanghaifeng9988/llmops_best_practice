@@ -20,7 +20,7 @@ def main() -> None:
     client.load_collection(COLLECTION)
 
     credentials = pika.PlainCredentials(settings.RABBITMQ_DEFAULT_USERNAME, settings.RABBITMQ_DEFAULT_PASSWORD)
-    connection = pika.BlockingConnection(
+    connection = pika.BlockingConnection( # 同步阻塞式客户端，适合简单 worker。
         pika.ConnectionParameters(host=settings.RABBITMQ_HOST, port=settings.RABBITMQ_PORT, credentials=credentials)
     )
     channel = connection.channel()
@@ -60,7 +60,8 @@ def main() -> None:
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
             return
         ch.basic_ack(delivery_tag=method.delivery_tag)
-
+#  pika 库中 BlockingChannel 对象
+# 用于告诉 RabbitMQ：“我要开始从这个队列消费消息了，每来一条消息，就调用我指定的那个回调函数”。
     channel.basic_consume(queue=settings.RABBITMQ_QUEUE_NAME, on_message_callback=callback)
     print("消费者就绪，等待消息... (Ctrl+C 退出)")
     try:
