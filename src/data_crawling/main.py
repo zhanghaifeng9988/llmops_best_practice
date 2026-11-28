@@ -35,6 +35,6 @@ def handler(event, context: LambdaContext | None = None) -> dict[str, Any]:
 if __name__ == "__main__":
     event = {
         "user": "zhang haifeng",
-        "link": "https://github.com/zhanghaifeng9988/-ml-learning-notes-homework",
+        "link": "https://github.com/zhanghaifeng9988/llmops_best_practice.git",
     }
     handler(event, None)
